@@ -1,0 +1,108 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "DynamoDB PutItem",
+  "States": {
+    "DynamoDB PutItem": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {
+        "TableName": "numb",
+        "Item.$": "$.Item"
+      },
+      "Next": "Lambda Invoke",
+      "ResultPath": null
+    },
+    "Lambda Invoke": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "arn:aws:lambda:ap-northeast-1:335516814222:function:stepfunc1:$LATEST"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Lambda Invoke (1)"
+    },
+    "Lambda Invoke (1)": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "arn:aws:lambda:ap-northeast-1:335516814222:function:stepfunc2:$LATEST"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "OutputPath": "$.Payload",
+      "Next": "Choice"
+    },
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.statusCode",
+          "NumericEquals": 200,
+          "Next": "success_update"
+        }
+      ],
+      "Default": "failure_update"
+    },
+    "failure_update": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "MyDynamoDBTable",
+        "Key": {
+          "step_function_name": {
+            "S": "$.instance_id"
+          }
+        },
+        "UpdateExpression": "SET step_func_status = :myValueRef",
+        "ExpressionAttributeValues": {
+          ":myValueRef": {
+            "S": "Failed"
+          }
+        }
+      },
+      "End": true
+    },
+    "success_update": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:updateItem",
+      "Parameters": {
+        "TableName": "numb",
+        "Key": {
+          "step_function_name": "$.instance_id"
+        },
+        "UpdateExpression": "SET step_func_status = :myValueRef",
+        "ExpressionAttributeValues": {
+          ":myValueRef": {
+            "S": "success"
+          }
+        }
+      },
+      "End": true
+    }
+  }
+}
