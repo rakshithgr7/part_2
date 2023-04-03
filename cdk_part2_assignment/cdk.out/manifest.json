@@ -1,0 +1,184 @@
+{
+  "version": "31.0.0",
+  "artifacts": {
+    "Part2CdkStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "Part2CdkStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "Part2CdkStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "Part2CdkStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/762dfcc1eb6c1d553448036e793c6d8b2d29909c0616d5972d2025312d5ced76.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "Part2CdkStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "Part2CdkStack.assets"
+      ],
+      "metadata": {
+        "/Part2CdkStack/MyEncryptedBucket/Key/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEncryptedBucketKeyA262639F"
+          }
+        ],
+        "/Part2CdkStack/MyEncryptedBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEncryptedBucket9A8D2FE1"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpc037DA4AF"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet1Subnet2744EDFA"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet1RouteTable17452791"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet1RouteTableAssociation2C76D2E0"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet1DefaultRouteB7CE1177"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet2Subnet04ACD525"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet2RouteTableA3477C62"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet2RouteTableAssociationD5E00FF0"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/publicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcpublicSubnet2DefaultRoute8DD53508"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcIGW4220D5A9"
+          }
+        ],
+        "/Part2CdkStack/my-cdk-vpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mycdkvpcVPCGW2444B783"
+          }
+        ],
+        "/Part2CdkStack/webserver-sg/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webserversg676A088B"
+          }
+        ],
+        "/Part2CdkStack/webserver-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webserverroleDB0308B6"
+          }
+        ],
+        "/Part2CdkStack/webserver-role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webserverroleDefaultPolicyB5C1A502"
+          }
+        ],
+        "/Part2CdkStack/ec2-instance/InstanceProfile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ec2instanceInstanceProfile9BCE9015"
+          }
+        ],
+        "/Part2CdkStack/ec2-instance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ec2instance42082E81"
+          }
+        ],
+        "/Part2CdkStack/SsmParameterValue:--aws--service--ami-amazon-linux-latest--amzn2-ami-hvm-x86_64-gp2:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter"
+          }
+        ],
+        "/Part2CdkStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/Part2CdkStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/Part2CdkStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Part2CdkStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Part2CdkStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
