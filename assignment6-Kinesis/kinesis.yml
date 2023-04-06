@@ -1,0 +1,132 @@
+Resources:
+  MyStream: 
+    Type: AWS::Kinesis::Stream 
+    Properties: 
+        Name: assign-6-kinesis-2-2-34
+        RetentionPeriodHours: 48
+        ShardCount: 1
+
+  
+  kinesisDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+          -
+            AttributeName: "ArtistId"
+            AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "ArtistId"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: kinesisDB27
+
+
+        
+
+  datagen:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: generates random data to feed the kinesis stream
+      FunctionName: datagenerator2_1
+      MemorySize: 128
+      Handler: datagen.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn 
+      Runtime:  python3.9
+      Code:
+        S3Bucket: fkinesistest
+        S3Key: datagen.zip
+      Environment:
+        Variables:
+          kinesistream: !Ref MyStream
+
+
+          
+
+  feeder:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: inserts data into dynamodb
+      FunctionName: feeder2_1
+      MemorySize: 128
+      Handler: feeder.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn 
+      Runtime: python3.9
+      Code:
+        S3Bucket: fkinesistest 
+        S3Key: feeder.zip
+      Environment:
+        Variables:
+          dynamotable: !Ref kinesisDB
+          s3Bucket: !Ref s3Bucket
+        
+        #   S3ObjectVersion: 
+        #   ZipFile: 
+
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl: Private
+      BucketName: kinesissfinal909
+
+       
+  LambdaExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Path: "/"
+        Policies:
+          - PolicyName: "dynamodb-full-access"
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:*
+                  Resource: "*"
+          - PolicyName: "kinesis-full-access"
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - kinesis:*
+                  Resource: "*"
+          - PolicyName: "s3-full-access"
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:*
+                  Resource: "*"
+          - PolicyName: "LambdaExecutionPolicy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - "logs:CreateLogGroup"
+                    - "logs:CreateLogStream"
+                    - "logs:PutLogEvents"
+                  Resource: "*"
+  
+
+
+
+  MyKinesisTrigger:
+    Type: "AWS::Lambda::EventSourceMapping"
+    Properties:
+      BatchSize: 100
+      EventSourceArn: !GetAtt MyStream.Arn
+      FunctionName: !Ref feeder
+      StartingPosition: "TRIM_HORIZON"
